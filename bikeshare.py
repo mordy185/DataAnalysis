@@ -1,7 +1,5 @@
 import time
 import pandas as pd
-import numpy as np
-import sys
 
 
 CITY_DATA = { 'Chicago': 'chicago.csv',
@@ -30,7 +28,6 @@ def get_filters():
         (str) month - name of the month to filter by, or "all" to apply no month filter
         (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
-
 
     print('Hello! Let\'s explore some US bikeshare data!')
     # get user input for city (Chicago, NewYorkCity, Washington). HINT: Use a while loop to handle invalid inputs
@@ -151,23 +148,26 @@ def station_stats(df):
 
     # display most commonly used start station
     top_start = df[['StartStation', 'Month']].dropna()
-    top_start = top_start.groupby(['StartStation']).size().sort_values(ascending=False)
-    maxVal = top_start.iloc[0]
-    maxVal = str(top_start[top_start == maxVal].index[0])
+    # this is another way of doing it using count()
+    top_start = top_start.groupby(['StartStation']).count().sort_values(['Month'], ascending=False)
+    maxVal = top_start.index[0]
     print("the most common Start Station is : " + maxVal)
 
     # display most commonly used end station
     top_end = df[['EndStation', 'Month']].dropna()
-    top_end = top_end.groupby(['EndStation']).size().sort_values(ascending=False)
-    maxVal = top_end.iloc[0]
-    maxVal = str(top_end[top_end == maxVal].index[0])
+    # this is another way of doing it using count()
+    top_end = top_end.groupby(['EndStation']).count().sort_values(['Month'], ascending=False)
+    maxVal = top_end.index[0]
     print("the most common End Station is : " + maxVal)
 
     # display most frequent combination of start station and end station trip
-
+    top_start_end = df[['StartStation', 'EndStation', 'Month']].dropna()
+    # this is another way of doing it using count()
+    top_start_end = top_start_end.groupby(['StartStation', 'EndStation']).count().sort_values(['Month'],ascending=False)
+    print('Frequent trip from: {} ---to---> {}'.format(top_start_end.index[0][0], top_start_end.index[0][1]))
 
     print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-'*40)
+    print('-' * 40)
 
 
 def trip_duration_stats(df):
@@ -249,6 +249,5 @@ def main():
         if restart.lower() != 'yes':
             break
 
-
 if __name__ == "__main__":
-	main()
+    main()
