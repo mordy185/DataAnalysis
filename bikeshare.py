@@ -42,7 +42,7 @@ def get_filters():
                 assert int(cc) in dicCITY
                 city = dicCITY[int(cc)]
             except (AssertionError,ValueError) :
-                print("YOU SUCK  ")
+                print("Invalid Input !!  ")
 
     # get user input for month (all, january, february, ... , june)
         if  city and not month :
@@ -108,6 +108,24 @@ def load_data(city, month, day):
     print (str(df.count()[0])+ ' Records Found' )
     print('-'*52)
     return df
+
+def explore_data(df):
+    view_data = input('\nWould you like to view 5 rows of the trip data? Enter Y or N\n')
+    start_loc = 0
+    # get rid of the existing index column named 'Unnamed: 0' to avoid multiple indices
+    if 'Unnamed: 0' in df.columns:
+        df=df.drop(columns=df.columns[0])
+    while (True):
+        try:
+            assert view_data.lower() in ['y','n']
+            if (view_data.lower() == 'n'):
+                print('-'*52)
+                break
+            print(df.iloc[start_loc:start_loc + 5])
+            start_loc += 5
+            view_data = input('\nVIEW MORE ?: Enter Y or N \n').lower()
+        except (AssertionError, ValueError):
+            view_data =input("\nInvalid Input !! Enter Y or N \n  ").lower()
 
 
 def time_stats(df):
@@ -225,17 +243,14 @@ def user_stats(df):
 
 
 def main():
-    '''city, month, day = get_filters()
+    city, month, day = get_filters()
     df = load_data(city, month, day)
+    explore_data(df)
     time_stats(df)
     station_stats(df)
     trip_duration_stats(df)
     user_stats(df)
-'''
-          #
-          #
-          #
-          ######
+
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
